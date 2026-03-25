@@ -1,0 +1,24 @@
+{
+  "name": "AuditVisa",
+  "domain": "auditvisa.org",
+  "issuer": "https://auditvisa.org/",
+  "type": "trust-layer",
+  "version": "1.0",
+  "description": "AuditVisa certifies that an event happened through structured evidence, timestamps, and verifiable signatures.",
+  "origin": "https://evanbei.com/",
+  "research_context": "https://goldisle.org/",
+  "root_anchor": "https://aiorigins.org/",
+  "public_structure": "https://aipoints.org/",
+  "capabilities": [
+    "event-proof",
+    "timestamping",
+    "multi-node-signatures",
+    "structured-evidence",
+    "machine-readable-output"
+  ],
+  "links": {
+    "homepage": "https://auditvisa.org/",
+    "contact": "mailto:hello@auditvisa.org",
+    "machine_entry": "https://auditvisa.org/node.json"
+  }
+}
