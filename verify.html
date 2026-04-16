@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Origins – Verify</title>
+<style>
+body {
+  font-family: -apple-system;
+  background: #0b0b0b;
+  color: #eee;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+input {
+  width: 80%;
+  max-width: 500px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  padding: 10px 16px;
+  margin-left: 8px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: white;
+}
+
+.result {
+  margin-top: 40px;
+  text-align: left;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.valid { color: #22c55e; }
+.invalid { color: #ef4444; }
+</style>
+</head>
+
+<body>
+
+<h1>AI Origins Verification</h1>
+<p>Enter a hash to verify trust and signatures</p>
+
+<input id="hash" placeholder="Enter hash...">
+<button onclick="verify()">Verify</button>
+
+<div id="output" class="result"></div>
+
+<script>
+
+async function verify() {
+  const hash = document.getElementById("hash").value.trim();
+  const out = document.getElementById("output");
+
+  out.innerHTML = "Loading...";
+
+  try {
+    const res = await fetch("http://89.167.28.102:23666/anchor.log");
+    const text = await res.text();
+
+    const lines = text.split("\n");
+    const found = lines.filter(l => l.startsWith(hash));
+
+    if (found.length === 0) {
+      out.innerHTML = "<b>Not found</b>";
+      return;
+    }
+
+    let html = "";
+
+    found.forEach(line => {
+
+      const sigPart = line.split("sigs=")[1] || "";
+      const sigs = sigPart.split("|")[0].split(",");
+      const count = sigs.filter(s => s.trim() !== "").length;
+
+      const status = count >= 2 ? "VALID" : "INVALID";
+
+      html += `
+        <div style="margin-bottom:20px;">
+          <div><b>Hash:</b> ${hash}</div>
+          <div><b>Signatures:</b> ${count}</div>
+          <div class="${status === 'VALID' ? 'valid' : 'invalid'}">
+            <b>Status:</b> ${status}
+          </div>
+          <div><b>Raw:</b><br>${line}</div>
+        </div>
+      `;
+    });
+
+    out.innerHTML = html;
+
+  } catch(e) {
+    out.innerHTML = "Error loading data";
+  }
+}
+
+</script>
+
+</body>
+</html>
